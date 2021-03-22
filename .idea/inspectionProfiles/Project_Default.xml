@@ -1,0 +1,61 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ourVersions">
+        <value>
+          <list size="2">
+            <item index="0" class="java.lang.String" itemvalue="3.6" />
+            <item index="1" class="java.lang.String" itemvalue="3.7" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="15">
+            <item index="0" class="java.lang.String" itemvalue="python-dateutil" />
+            <item index="1" class="java.lang.String" itemvalue="flair" />
+            <item index="2" class="java.lang.String" itemvalue="environs" />
+            <item index="3" class="java.lang.String" itemvalue="django-rest-polymorphic" />
+            <item index="4" class="java.lang.String" itemvalue="whitenoise" />
+            <item index="5" class="java.lang.String" itemvalue="conllu" />
+            <item index="6" class="java.lang.String" itemvalue="djangorestframework-xml" />
+            <item index="7" class="java.lang.String" itemvalue="django-filter" />
+            <item index="8" class="java.lang.String" itemvalue="pyexcel" />
+            <item index="9" class="java.lang.String" itemvalue="seqeval" />
+            <item index="10" class="java.lang.String" itemvalue="Django" />
+            <item index="11" class="java.lang.String" itemvalue="furl" />
+            <item index="12" class="java.lang.String" itemvalue="djangorestframework" />
+            <item index="13" class="java.lang.String" itemvalue="django-cors-headers" />
+            <item index="14" class="java.lang.String" itemvalue="pyexcel-xlsx" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E265" />
+          <option value="E261" />
+          <option value="E303" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="typing.Iterable.port" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
