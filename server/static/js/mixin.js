@@ -212,6 +212,7 @@ const annotationMixin = {
     },
 
     async search() {
+      console.log("in search")
       HTTP.get(this.url).then((response) => this.process_data(response));
     },
 
@@ -227,10 +228,15 @@ const annotationMixin = {
 
     async submit() {
       const state = this.getState();
-      if (this.active != 1 && this.server === true){
+      if (this.active !== 1 && this.server === true){
         this.activelearning().then((response) => {
-            this.url = `docs/?q=${this.searchQuery}&is_checked=${state}&offset=${this.offset}&limit=${this.acquire}&active_indices=${this.activeIndices}`;
-            this.search();
+            if(this.activeIndices[0]===-1){
+              return
+            }
+            else {
+              this.url = `docs/?q=${this.searchQuery}&is_checked=${state}&offset=${this.offset}&limit=${this.acquire}&active_indices=${this.activeIndices}`;
+              this.search();
+            }
           });
       }
       else {
@@ -254,6 +260,10 @@ const annotationMixin = {
         this.activeScores = response.data.scores;
         console.log(this.activeIndices);
         console.log(this.activeScores);
+        if(this.activeIndices[0]===-1){
+        console.log(window.location.href)
+        window.location.href=window.location.href+"docs/";
+      }
       });
     },
 

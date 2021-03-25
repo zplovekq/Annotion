@@ -2,7 +2,9 @@ from collections import Counter
 from itertools import chain
 
 from django.db.utils import IntegrityError
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.urls import reverse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, filters, mixins
 from rest_framework.decorators import action
@@ -602,7 +604,9 @@ class ActiveLearning(APIView):
         setting_data = serializer_class(setting_obj).data
 
         active_data = alpaca_active_learning(train_docs, setting_data['acquire'])
-
+        if active_data['scores'][0] == float('inf'):
+            active_data["indices"][0]=-1
+            active_data['scores'][0]=-1
         response = {'indices': active_data['indices'], 'scores': active_data['scores']}
 
         return Response(response)

@@ -116,13 +116,15 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
             else:
                 raise DataUpload.ImportFileError("CSV file must have either a title with \"text\" column or have only one column ")
 
-            header_without_text = [title for i, title in enumerate(maybe_header)
-                                   if i != text_col]
+            # header_without_text = [title for i, title in enumerate(maybe_header)
+            #                        if i != text_col]
 
             return (
                 Document(
-                    text=" ".join(str(x.text) for x in nlp(row[text_col])),
-                    metadata=self.extract_metadata_csv(row, text_col, header_without_text),
+                    # text=" ".join(str(x.text) for x in nlp(row[text_col])),
+                    text="".join(row),
+                    metadata={},
+                    # metadata=self.extract_metadata_csv(row, text_col, header_without_text),
                     project=project
                 )
                 for row in reader
@@ -211,7 +213,7 @@ class DataDownloadFile(LoginRequiredMixin, View):
         response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(filename)
         for d in docs:
             print(d.to_json())
-            dump = json.dumps(d.to_json(user_id), ensure_ascii=False)
+            dump = json.dumps(d.to_json(), ensure_ascii=False)
             response.write(dump + '\n')  # write each json object end with a newline
         return response
 

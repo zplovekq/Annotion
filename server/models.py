@@ -5,9 +5,11 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.staticfiles.storage import staticfiles_storage
 from .utils import get_key_choices
-
+from zhon.hanzi import punctuation
+import string
 import spacy
 from spacy.tokens import Doc
+
 
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
@@ -18,6 +20,7 @@ class WhitespaceTokenizer(object):
         # All tokens 'own' a subsequent space character in this tokenizer
         spaces = [True] * len(words)
         return Doc(self.vocab, words=words, spaces=spaces)
+
 
 nlp = spacy.load("en_core_web_sm")
 nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
@@ -63,7 +66,7 @@ class Project(models.Model):
     def get_index_documents(self, indices):
         docs = self.documents.all()
         docs_indices = [d.id for d in docs]
-        active_indices = [docs_indices[i-1] for i in indices]
+        active_indices = [docs_indices[i - 1] for i in indices]
         docs = list(docs.filter(pk__in=active_indices))
         docs.sort(key=lambda t: active_indices.index(t.pk))
         return docs
@@ -128,27 +131,27 @@ class Document(models.Model):
 
     def make_dataset_for_sequence_labeling(self, user_id):
         annotations = self.get_annotations_user(user_id=user_id)
-        doc = nlp(self.text)
-        words = [token.text for token in doc]
+        # doc = nlp(self.text)
+        # words = [token.text for token in doc]
+        words = [token for token in self.text]
         dataset = [[self.id, word, 'O', self.metadata] for word in words]
         startoff_map = {}
         endoff_map = {}
 
         start_off = 0
-        for word_index, word in enumerate(dataset):
-            end_off = start_off + len(word[1])
-            startoff_map[start_off] = word_index
-            endoff_map[end_off] = word_index
-            start_off = end_off + 1
 
+        def is_valid(item):
+            word = item[1]
+            if word == " ":
+                return False
+            if word in punctuation or word in string.punctuation:
+                return False
+            return True
         for a in annotations:
-
-            if a.start_offset in startoff_map:
-                dataset[startoff_map[a.start_offset]][2] = 'B-{}'.format(a.label.text)
-            if a.end_offset in endoff_map:
-                # print(startoff_map[a.end_offset])
-                if endoff_map[a.end_offset] != startoff_map[a.start_offset]:
-                    dataset[endoff_map[a.end_offset]][2] = 'I-{}'.format(a.label.text)
+            dataset[a.start_offset][2] = 'B-{}'.format(a.label.text)
+            for i in range(a.start_offset + 1, a.end_offset):
+                dataset[i][2] = 'I-{}'.format(a.label.text)
+        dataset = [item for item in dataset if is_valid(item)]
 
         return dataset
 
@@ -162,7 +165,8 @@ class Document(models.Model):
         annotations = self.get_annotations()
         entities = [(a.start_offset, a.end_offset, a.label.text) for a in annotations]
         username = annotations[0].user.username
-        dataset = {'doc_id': self.id, 'text': self.text, 'entities': entities, 'username': username, 'metadata': json.loads(self.metadata)}
+        dataset = {'doc_id': self.id, 'text': self.text, 'entities': entities, 'username': username,
+                   'metadata': json.loads(self.metadata)}
         return dataset
 
     def __str__(self):
@@ -205,7 +209,7 @@ class RecommendationHistory(models.Model):
 class Setting(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, related_name='settings', on_delete=models.CASCADE)
-    embedding = models.IntegerField() #1-glove 2-w2v 3-fasttext 4-bert 5-elmo 6-gpt
+    embedding = models.IntegerField()  # 1-glove 2-w2v 3-fasttext 4-bert 5-elmo 6-gpt
     nounchunk = models.BooleanField()
     onlinelearning = models.BooleanField()
     history = models.BooleanField()
