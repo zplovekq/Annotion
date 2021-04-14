@@ -350,22 +350,25 @@ class RecommendationList(APIView):
 
     def index_word2char(self, entities, words):
         res = []
-        for i in range(len(entities)):
-            startOffset = 0
-            for j in range(entities[i]['beginOffset']):
-                startOffset = startOffset + len(words[j])
-                startOffset = startOffset + 1
-
-            endOffset = startOffset
-
-            for j in range(entities[i]['beginOffset'], entities[i]['endOffset']):
-                endOffset = endOffset + len(words[j])
-                endOffset = endOffset + 1
-
-            endOffset = endOffset - 1
+        l=len(entities)
+        i = 0
+        while i < l:
+            # startOffset = 0
+            # for j in range(entities[i]['beginOffset']):
+            #     startOffset = startOffset + len(words[j])
+            #     startOffset = startOffset + 1
+            #
+            # endOffset = startOffset
+            #
+            # for j in range(entities[i]['beginOffset'], entities[i]['endOffset']):
+            #     endOffset = endOffset + len(words[j])
+            #     endOffset = endOffset + 1
+            #
+            # endOffset = endOffset - 1
 
             recommend = {'document': self.kwargs['doc_id'], 'label': entities[i]['type'],
-                         'start_offset': startOffset, 'end_offset': endOffset}
+                         'start_offset': entities[i]['beginOffset'], 'end_offset': entities[i]['endOffset']}
+            i+=1
             res.append(recommend)
         return res
 
@@ -512,11 +515,15 @@ class RecommendationList(APIView):
                         label_queryset = label_queryset.filter(project=self.kwargs['project_id'])
                         label_obj = get_object_or_404(label_queryset, pk=h['label'])
                         label_data = serializer_class(label_obj).data
-                        start_offset = document.text.lower().find(h['word'].lower())
-                        end_offset = start_offset + len(h['word'])
-                        h_dict = {'document': self.kwargs['doc_id'], 'label': label_data['text'],
-                                  'start_offset': start_offset, 'end_offset': end_offset}
-                        tmp_h_list.append(h_dict)
+                        end_offset = 0
+                        while 1:
+                            start_offset = document.text.lower().find(h['word'].lower(),end_offset)
+                            if start_offset == -1:
+                                break
+                            end_offset = start_offset + len(h['word'])
+                            h_dict = {'document': self.kwargs['doc_id'], 'label': label_data['text'],
+                                      'start_offset': start_offset, 'end_offset': end_offset}
+                            tmp_h_list.append(h_dict)
 
             if len(tmp_h_list) > 0 and len(tmp_o_list) > 0:
                 for tmp_h in tmp_h_list:
@@ -556,7 +563,7 @@ class LearningInitiate(APIView):
                 predefined_label.append('I-' + str(i))
             predefined_label.append('O')
             docs = [doc for doc in p.documents.all()]
-            train_docs = [str.split(doc.text) for doc in docs]
+            train_docs = [[d for d in doc.text] for doc in docs]
 
             alpaca_online_initiate(train_docs, predefined_label)
             response = {'initiated': True, 'loaded': False}
@@ -579,7 +586,7 @@ class OnlineLearning(APIView):
         docs_num = request.data.get('indices')
         docs = [doc for doc in p.documents.filter(pk__in=docs_num)]
         annotations = [[label[2] for label in doc.make_dataset_for_sequence_labeling(self.request.user.id)] for doc in docs]
-        train_docs = [str.split(doc.text) for doc in docs]
+        train_docs = [[d for d in doc.text] for doc in docs]
 
         alpaca_online_learning(train_docs, annotations, setting_data['epoch'], setting_data['batch'])
         response = {'docs': train_docs,
@@ -595,7 +602,7 @@ class ActiveLearning(APIView):
     def get(self, request, *args, **kwargs):
         p = get_object_or_404(Project, pk=self.kwargs['project_id'])
         docs = [doc for doc in p.documents.all()]
-        train_docs = [str.split(doc.text) for doc in docs]
+        train_docs = [[d for d in doc.text] for doc in docs]
 
         setting_queryset = Setting.objects.all()
         serializer_class = SettingSerializer

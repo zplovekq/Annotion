@@ -36,11 +36,11 @@
 
 <section class="hero banner banner--hero">
 <div class="banner--hero__content">
-    <h1><span><b>Hello, {{ user.get_username | title }}.</b></span></h1>
-  <h3><span>I hope you are having a great day!</span></h3>
+    <h1><span><b>你好, {{ user.get_username | title }}.</b></span></h1>
+  <h3><span>欢迎来到智能标注系统!</span></h3>
   <div class="banner--hero__cta-container">
           {% if user.is_superuser %}
-          <a class="btn" @click="isActive=!isActive">Create Project</a>
+          <a class="btn" @click="isActive=!isActive">创建项目</a>
           {% endif %}
          </div>
 
@@ -142,8 +142,8 @@
                   </td>
                   <td class="is-vertical"><span class="tag is-normal">[[ project.project_type ]]</span></td>
                   {% if user.is_superuser %}
-                  <td class="is-vertical"><a v-bind:href="'/projects/' + project.id + '/docs'">Edit</a></td>
-                  <td class="is-vertical"><a class="has-text-danger" @click="setProject(project)">Delete</a></td>
+                  <td class="is-vertical"><a v-bind:href="'/projects/' + project.id + '/docs'">编辑</a></td>
+                  <td class="is-vertical"><a class="has-text-danger" @click="setProject(project)">删除</a></td>
                   {% endif %}
                 </tr>
               </tbody>

@@ -6,7 +6,7 @@
   <header class="card-header">
 
       <div class="model__content">
-        <h2><span>Label</span></h2>
+        <h2><span>标签</span></h2>
       </div>
 {#    <a href="#" class="card-header-icon" aria-label="more options">#}
 {#      <span class="icon">#}
@@ -21,7 +21,7 @@
         <div class="field is-grouped is-grouped-multiline has-text-weight-bold pbrem075 is-horizontal bordered-row">
 
           <div class="column is-3 mb0">
-            <label class="label mb0">Current Labels</label>
+            <label class="label mb0">目前的标签</label>
           </div>
 
         <div class="control columns is-6" v-for="label in labels">
@@ -36,7 +36,7 @@
       </div>
 
       <div class="field is-horizontal bordered-row">
-        <label class="label column is-3 mb0">Preview</label>
+        <label class="label column is-3 mb0">预览</label>
         <div class="control column is-6">
           <div class="tags has-addons has-text-weight-bold">
             <a class="tag is-medium" v-bind:style="{ color: textColor, backgroundColor: backgroundColor }">
@@ -49,23 +49,23 @@
 
       <div class="field is-horizontal bordered-row">
         <div class="column is-3 mb0">
-          <label class="label mb0">Label Name</label>
+          <label class="label mb0">标签名</label>
 {#          <p class="is-small has-text-grey">required</p>#}
         </div>
         <div class="control column is-6">
-          <input class="input" type="text" placeholder="Text input" v-model="labelText">
+          <input class="input" type="text" placeholder="请在此输入标签名" v-model="labelText">
         </div>
       </div>
 
       <div class="field is-horizontal bordered-row">
         <div class="column is-3 mb0">
-          <label class="label mb0">Shortcut Key</label>
-{#          <p class="is-small has-text-grey">optional</p>#}
+          <label class="label mb0">快捷键</label>
+            {# <p class="is-small has-text-grey">optional</p>#}
         </div>
         <div class="control column is-narrow">
           <div class="select">
             <select v-model="selectedKey">
-              <option disabled value="">Please select one</option>
+              <option disabled value="">请选择一个</option>
               {% for ch in 'abcdefghijklmnopqrstuvwxyz' %}
               <option>{{ ch }}</option>
               {% endfor %}
@@ -84,7 +84,7 @@
 
       <div class="field is-horizontal bordered-row">
         <div class="column is-3 mb0">
-          <label class="label mb0">Background Color</label>
+          <label class="label mb0">背景颜色</label>
 {#          <p class="is-small has-text-grey">optional</p>#}
         </div>
         <div class="control column is-6">
@@ -94,7 +94,7 @@
 
       <div class="field is-horizontal bordered-row">
         <div class="column is-3 mb0">
-          <label class="label mb0">Text Color</label>
+          <label class="label mb0">文本颜色</label>
 {#          <p class="is-small has-text-grey">optional</p>#}
         </div>
         <div class="control column is-6">
@@ -105,10 +105,10 @@
 
         <div class="field is-grouped">
           <div class="control">
-              <button class="btn btn--icon-disclosure" @click="addLabel()">Add label</button>
+              <button class="btn btn--icon-disclosure" @click="addLabel()">添加标签</button>
           </div>
 {#          <div class="control">#}
-{#              <button class="button is-text" @click="reset()">RESET</button>#}
+{#              <button class="button is-text" @click="reset()">重置</button>#}
 {#          </div>#}
           <div class="control">
               <button class="btn btn--icon-disclosure" @click="reset()">Reset</button>

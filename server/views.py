@@ -16,11 +16,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from .permissions import SuperUserMixin
-from .models import Document, Project, RecommendationHistory
-
+from .models import Document, Project, RecommendationHistory,Label
+from server.serializers import LabelSerializer,RecommendationHistorySerializer
 import spacy
 from spacy.tokens import Doc
-
+from django.utils.encoding import escape_uri_path
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
         self.vocab = vocab
@@ -144,7 +144,50 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
             Document(text=entry[text_key], metadata=self.extract_metadata_json(entry, text_key), project=project)
             for entry in parsed_entries
         )
-
+    def load_owl_file(self,file):
+        import rdflib
+        result =[]
+        g = rdflib.Graph()
+        g.parse(file)
+        q = '''SELECT ?class ?classLabel
+                    WHERE {
+                    ?class rdf:type owl:Class.
+                    ?class rdfs:label ?classLabel.
+                    }'''
+        for a, b in g.query(q):
+            result.append(str(b))
+        return result
+    def add_label(self,data,project):
+        ls = LabelSerializer(data=data)
+        ls.is_valid()
+        ls.save(project=project)
+    def owl_to_labels(self,project,file):
+        import random
+        colorArr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+        label_list = self.load_owl_file(file)
+        data = { 'shortcut': None,  'text_color': '#ffffff'}
+        for label in label_list:
+            data['text']=str(label)
+            color = ""
+            for i in range(6):
+                color += colorArr[random.randint(0, 14)]
+            data['background_color']="#"+color
+            self.add_label(data,project)
+    def add_dict(self,data,project,user):
+        rs = RecommendationHistorySerializer(data=data)
+        rs.is_valid()
+        rs.save(project=project, user=user)
+    def json_to_dict(self,project,file,user):
+        labels =Label.objects.all().filter(project=project.id)
+        text_id ={}
+        for l in labels:
+            text_id[l.text]=l.id
+        contents = json.load(file)
+        data={}
+        for k in contents:
+            data['word']=k
+            data['label']=text_id[contents[k]]
+            self.add_dict(data,project,user)
     def post(self, request, *args, **kwargs):
         project = get_object_or_404(Project, pk=kwargs.get('project_id'))
         import_format = request.POST['format']
@@ -155,8 +198,12 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
                 documents = self.csv_to_documents(project, file)
 
             elif import_format == 'json':
-                documents = self.json_to_documents(project, file)
-
+                self.json_to_dict(project,file,self.request.user)
+                # documents = self.json_to_documents(project, file)
+                return HttpResponseRedirect(reverse('dictionary', args=[project.id]))
+            elif import_format == 'owl':
+                self.owl_to_labels(project,file)
+                return HttpResponseRedirect(reverse('label-management', args=[project.id]))
             IMPORT_BATCH_SIZE = 500
             batch_size = IMPORT_BATCH_SIZE
             while True:
@@ -202,7 +249,7 @@ class DataDownloadFile(LoginRequiredMixin, View):
 
     def get_csv(self, filename, docs, user_id):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
+        response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(escape_uri_path(filename))
         writer = csv.writer(response)
         for d in docs:
             writer.writerows(d.to_csv(user_id))
@@ -210,7 +257,7 @@ class DataDownloadFile(LoginRequiredMixin, View):
 
     def get_json(self, filename, docs, user_id):
         response = HttpResponse(content_type='text/json')
-        response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(filename)
+        response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(escape_uri_path(filename))
         for d in docs:
             print(d.to_json())
             dump = json.dumps(d.to_json(), ensure_ascii=False)

@@ -8,19 +8,19 @@
   <span class="icon">
     <i class="fas fa-user-edit"></i>
   </span>
-  <b>Annotate Data</b>
+  <b>开始标注</b>
 </a>
 <a class="navbar-item" href="{% url 'upload' view.kwargs.project_id %}">
   <span class="icon">
     <i class="fas fa-upload"></i>
   </span>
-  <b>Import Data</b>
+  <b>导入数据集、模型和字典</b>
 </a>
 <a class="navbar-item" href="{% url 'download' view.kwargs.project_id %}">
   <span class="icon">
     <i class="fas fa-download"></i>
   </span>
-  <b>Export Data</b>
+  <b>导出数据</b>
 </a>
 {% endblock %}
 {% block content %}
@@ -32,31 +32,31 @@
           <span class="icon">
             <i class="fa fa-inbox"></i>
           </span>
-          <span class="name">Dataset</span>
+          <span class="name">数据集</span>
         </a>
         <a href="{% url 'label-management' view.kwargs.project_id %}" class="item">
           <span class="icon">
             <i class="fa fa-star"></i>
           </span>
-          <span class="name">Labels</span>
+          <span class="name">标签</span>
         </a>
         <a href="{% url 'stats' view.kwargs.project_id %}" class="item">
           <span class="icon">
             <i class="fas fa-signal"></i>
           </span>
-          <span class="name">Statistics</span>
+          <span class="name">统计状态</span>
         </a>
         <a href="{% url 'setting' view.kwargs.project_id %}" class="item">
           <span class="icon">
             <i class="fas fa-book"></i>
           </span>
-          <span class="name">Settings</span>
+          <span class="name">标注设置</span>
         </a>
         <a href="{% url 'dictionary' view.kwargs.project_id %}" class="item">
           <span class="icon">
             <i class="fas fa-book"></i>
           </span>
-          <span class="name">Dictionary</span>
+          <span class="name">实体字典</span>
         </a>
       </div>
     </div>

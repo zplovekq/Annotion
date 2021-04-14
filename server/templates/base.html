@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AlpacaTag - Active Learning-based Crowd Annotation Framework </title>
+  <title>智能标注工具 </title>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
     crossorigin="anonymous">
@@ -59,9 +59,9 @@
   <nav class="navbar has-shadow">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item" href="{% url 'index' %}">
-          <img src="{% static 'images/logo.png' %}" width="32" height="32">
-          <b>&nbsp;&nbsp;AlpacaTag</b>
+        <a class="navbar-item" >
+          <img src="{% static 'images/pku.png' %}" width="32" height="32">
+          <b>&nbsp;&nbsp;智能标注工具</b>
         </a>
         {% block navigation %}{% endblock %}
       </div>
@@ -74,16 +74,16 @@
           {% endif %}
           {% if user.is_authenticated %}
           <a id="project_button" class="navbar-item" href="{% url 'projects' %}">
-            <span>Projects</span>
+            <span>项目</span>
           </a>
           {% endif %}
           {% if not user.is_authenticated %}
           <a class="navbar-item" href="{% url 'login' %}">
-            <span>Live Demo</span>
+            <span>登录</span>
           </a>
           {% else %}
           <a class="navbar-item" href="{% url 'logout' %}">
-            <span>Logout</span>
+            <span>退出登录</span>
           </a>
           {% endif %}
         </div>

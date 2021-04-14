@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from .views import IndexView
 from .views import ProjectView, DatasetView, DataUpload, LabelView, StatsView, SettingView, DictionaryView
-from .views import ProjectsView, DataDownload, DataDownloadFile
+from .views import ProjectsView, DataDownload, DataDownloadFile,LoginView
 from .api import ProjectViewSet, LabelList, ProjectStatsAPI, LabelDetail, \
     AnnotationList, AnnotationDetail, DocumentList, RecommendationList, LearningInitiate, OnlineLearning, DocumentDetail, \
     SettingList, ConnectToServer, RecommendationHistoryList, RecommendationHistoryDetail, ActiveLearning
@@ -14,7 +14,8 @@ router.register(r'projects', ProjectViewSet)
 
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    # path('', IndexView.as_view(), name='index'),
+    path('', LoginView.as_view(), name='login'),
     path('api/projects/<int:project_id>/stats/', ProjectStatsAPI.as_view(), name='stats-api'),
     path('api/projects/<int:project_id>/settings/', SettingList.as_view(), name='settings'),
     path('api/projects/<int:project_id>/history/', RecommendationHistoryList.as_view(), name='histories'),

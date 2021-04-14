@@ -11,7 +11,7 @@
   <span class="icon">
     <i class="fas fa-edit"></i>
   </span>
-    <b>Data / Settings</b>
+    <b>数据/设置</b>
 </a>
 {% endif %}
 {% endblock %}
@@ -59,7 +59,7 @@
       </div>
 
       <div class="main pt0 pb0 pr20 pl20">
-        <span>About [[ count ]] results</span>
+        <span>共有 [[ count ]] 待标注数据</span>
       </div>
 
       <div class="main">
@@ -95,11 +95,11 @@
         </div>
         <div class="column is-4">
             <span class="ml10"><strong>[[ onlineLearningIndices.size ]]</strong></span>/<span>[[ onlineLearningPer ]]</span>
-            <span> to train </span>
+            <span> 需要训练 </span>
         </div>
 
         <div class="column is-0 has-text-right">
-          <span class="tag is-small" v-bind:class="serverOn" disabled="">MODEL SERVER [[ serverMsg ]]</span>
+          <span class="tag is-small" v-bind:class="serverOn" disabled="">模型服务器: [[ serverMsg ]]</span>
           <span class="help-tip"><p>Something about embedding explanation</p></span>
         </div>
       </div>
@@ -110,13 +110,13 @@
       </div>
       <div class="column is-4">
         <span class="ml10"><strong>[[ total - remaining ]]</strong></span>/<span>[[ total ]]</span>
-          <span> to annotate </span>
+          <span> 需要标注 </span>
       </div>
 
         <div class="column is-0 has-text-right">
-          <span class="tag is-small" v-bind:class="nounOn" v-bind:value="achievementTrain" disabled="">Noun Chunk</span>
-          <span class="tag is-small" v-bind:class="onlineOn" v-bind:value="achievementTrain" disabled="">Online Learning</span>
-          <span class="tag is-small" v-bind:class="historyOn" v-bind:value="achievementTrain" disabled="">Annotation History</span>
+          <span class="tag is-small" v-bind:class="nounOn" v-bind:value="achievementTrain" disabled="">名词块</span>
+          <span class="tag is-small" v-bind:class="onlineOn" v-bind:value="achievementTrain" disabled="">主动学习</span>
+          <span class="tag is-small" v-bind:class="historyOn" v-bind:value="achievementTrain" disabled="">标注历史</span>
           <span class="help-tip">
               <p> - Enabled sources for intelligent recommendations
                  If the option is "blue", the option is turned on.
@@ -134,13 +134,13 @@
         <span class="icon">
           <i class="fas fa-chevron-left"></i>
         </span>
-        <span>Prev</span>
+        <span>上一页</span>
       </a>
       <div class="level-right">
           <div>
         <a class="button level-right" v-on:click="nextPage" v-shortkey="{next1: ['ctrl', 'n'], next2: ['arrowdown'], next3: ['arrowright']}"
         @shortkey="nextPage">
-            <span>Next</span>
+            <span>下一页</span>
             <span class="icon">
               <i class="fas fa-chevron-right"></i>
             </span>
@@ -150,7 +150,7 @@
     <div class="level mt30">
         <a class="level-left"></a>
         <a class="button level-right" ref="confirm" v-on:click="confirm">
-            <span>Skip (No entity)</span>
+            <span>跳过(本条不包含实体)</span>
             <span class="icon">
               <i class="fas fa-chevron-right"></i>
             </span>

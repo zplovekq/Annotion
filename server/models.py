@@ -135,10 +135,6 @@ class Document(models.Model):
         # words = [token.text for token in doc]
         words = [token for token in self.text]
         dataset = [[self.id, word, 'O', self.metadata] for word in words]
-        startoff_map = {}
-        endoff_map = {}
-
-        start_off = 0
 
         def is_valid(item):
             word = item[1]
@@ -148,10 +144,11 @@ class Document(models.Model):
                 return False
             return True
         for a in annotations:
+
             dataset[a.start_offset][2] = 'B-{}'.format(a.label.text)
             for i in range(a.start_offset + 1, a.end_offset):
                 dataset[i][2] = 'I-{}'.format(a.label.text)
-        dataset = [item for item in dataset if is_valid(item)]
+        # dataset = [item for item in dataset if is_valid(item)]
 
         return dataset
 

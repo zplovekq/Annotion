@@ -21,7 +21,8 @@
         </p>
         <ul.is-unstyled>
           <li>CSV file: file must contain a header with a text column or be one-column csv file.</li>
-          <li>JSON file: each line should contain a json object with at least one key 'text', which contains a text.</li>
+          <li>JSON file: a dictionary about key and label</li>
+          <li>OWL file: a owl file which defined class labels</li>
         </ul.is-unstyled>
         <form action="" method="post" enctype="multipart/form-data">
           {% csrf_token %}
@@ -30,6 +31,7 @@
               <label class="radio mb10">
                 <input type="radio" name="format" value="csv" checked> Upload a CSV file from your computer<br>
                 <input type="radio" name="format" value="json" checked> Upload a JSON file from your computer<br>
+                <input type="radio" name="format" value="owl" checked> Upload a OWL file from your computer<br>
                </label>
               <div class="file has-name is-small mb20">
                 <label class="file-label">
@@ -52,7 +54,7 @@
 
           <div class="field is-grouped">
             <div class="control">
-              <button type="submit" class="button is-primary">Upload dataset</button>
+              <button type="submit" class="button is-primary">Upload file</button>
             </div>
             <div class="control">
               <button class="button is-text">Cancel</button>
