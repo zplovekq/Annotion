@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+{% block navigation %}
+<a class="navbar-item" href="{% url 'annotation' view.kwargs.project_id %}">
+  <span class="icon">
+    <i class="fas fa-user-edit"></i>
+  </span>
+  <b>开始标注</b>
+</a>
+<a class="navbar-item" href="{% url 'upload' view.kwargs.project_id %}">
+  <span class="icon">
+    <i class="fas fa-upload"></i>
+  </span>
+  <b>导入数据</b>
+</a>
+<a class="navbar-item" href="{% url 'download' view.kwargs.project_id %}">
+  <span class="icon">
+    <i class="fas fa-download"></i>
+  </span>
+  <b>导出数据</b>
+</a>
+{% endblock %}
+{% block content %}
+<div class="columns mr0" id="mail-app" v-cloak>
+  <aside class="column is-2 aside">
+    <div>
+      <div class="main">
+        <a href="{% url 'dataset' view.kwargs.project_id %}" class="item">
+          <span class="icon">
+            <i class="fa fa-inbox"></i>
+          </span>
+          <span class="name">数据集</span>
+        </a>
+        <a href="{% url 'label-management' view.kwargs.project_id %}" class="item">
+          <span class="icon">
+            <i class="fa fa-star"></i>
+          </span>
+          <span class="name">标签</span>
+        </a>
+        <a href="{% url 'stats' view.kwargs.project_id %}" class="item">
+          <span class="icon">
+            <i class="fas fa-signal"></i>
+          </span>
+          <span class="name">统计状态</span>
+        </a>
+        <a href="{% url 'setting' view.kwargs.project_id %}" class="item">
+          <span class="icon">
+            <i class="fas fa-book"></i>
+          </span>
+          <span class="name">标注设置</span>
+        </a>
+        <a href="{% url 'dictionary' view.kwargs.project_id %}" class="item">
+          <span class="icon">
+            <i class="fas fa-book"></i>
+          </span>
+          <span class="name">实体字典</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+  <div class="column is-10 messages hero is-fullheight" id="message-feed">
+    {% if messages %}
+      <div>
+        <article class='message is-danger'>
+          <div class='message-body'>
+            <ul>
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+      </div>
+    {% endif %}
+    {% block content-area %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

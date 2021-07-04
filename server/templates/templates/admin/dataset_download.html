@@ -1,0 +1,53 @@
+{% extends "admin/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+<div class="columns">
+  <div class="column is-12">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">
+          导出标注数据
+        </p>
+        <a href="#" class="card-header-icon" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </a>
+      </header>
+      <div class="card-content">
+        <p>
+          <b>可以三种导出方式,CSV、JSON和保存为系统的实例模型</b>
+        </p>
+        <p>
+          推荐导出为JSON格式。
+        </p>
+          <form action="{% url 'download_file' view.kwargs.project_id %}" method="get">
+            <div class="section">
+              <ul>
+                  <li>
+                    <a class="control">
+                      <button type="submit" class="button is-primary button-margin " name="format" value="csv">下载为CSV</button>
+                    </a>
+                  </li>
+                  <li>
+                  <a class="control">
+                    <button type="submit" class="button is-primary button-margin " name="format" value="json">下载为JSON文件</button>
+                  </a>
+
+                </li>
+                  <li>
+                      <a class="control">
+                    <button  type="button" class="button is-primary button-margin " name="format" value="json" onClick="function submitAction() {
+                        return false;
+                    }
+                    ">保存为系统实例模型</button>
+                    </a>
+                  </li>
+              </ul>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
