@@ -17,11 +17,11 @@
       <div class="field is-horizontal bordered-row ">
 
           <div class="tooltip-content column is-3 mb0">
-              <label class="label column is-3 mb0">Embedding</label>
-              <div class="help-tip">
-                  <p>Something about embedding explanation</p>
+                  <label class="label column is-12 mb0">Embedding模型</label>
+                  <div class="help-tip">
+                      <p>Something about active learning type explanation</p>
+                  </div>
               </div>
-          </div>
 
 
           <div class="control column is-narrow">
@@ -39,12 +39,12 @@
       </div>
       <div class="field is-horizontal bordered-row tooltip-content">
 
-          <div class="tooltip-content column is-3 mb0">
-              <label class="label column is-3 mb0">Recommendation</label>
-              <div class="help-tip">
-                  <p>Something about recommendation explanation</p>
+         <div class="tooltip-content column is-3 mb0">
+                  <label class="label column is-12 mb0">推荐方式</label>
+                  <div class="help-tip">
+                      <p>Something about active learning type explanation</p>
+                  </div>
               </div>
-          </div>
 
           <div class="is-narrow">
               <input class="is-checkradio" type="checkbox" id="nounchunk" value="nounchunk" v-model="nounchunk">
@@ -64,7 +64,7 @@
           <div class="field is-horizontal bordered-row tooltip-content">
 
               <div class="tooltip-content column is-3 mb0">
-                  <label class="label column is-12 mb0">Active learning</label>
+                  <label class="label column is-12 mb0">主动学习方式</label>
                   <div class="help-tip">
                       <p>Something about active learning type explanation</p>
                   </div>
@@ -89,7 +89,7 @@
           </div>
           <div class="field is-horizontal bordered-row tooltip-content">
               <div class="tooltip-content column is-3 mb0">
-                  <label class="label column is-12 mb0">Batch Size</label>
+                  <label class="label column is-12 mb0">Batch规模</label>
                   <div class="help-tip">
                       <p>Something about batch size explanation</p>
                   </div>
@@ -102,7 +102,7 @@
 
           <div class="field is-horizontal bordered-row tooltip-content">
               <div class="tooltip-content column is-3 mb0">
-                  <label class="label column is-12 mb0">Epoch per batch</label>
+                  <label class="label column is-12 mb0">训练Epoch</label>
                   <div class="help-tip">
                       <p>Something about epoch explanation</p>
                   </div>
@@ -116,7 +116,7 @@
 
           <div class="field is-horizontal bordered-row tooltip-content">
               <div class="tooltip-content column is-3 mb0">
-                  <label class="label column is-12 mb0">Acquire size</label>
+                  <label class="label column is-12 mb0">每轮标注规模</label>
                   <div class="help-tip">
                       <p>Something about acquire size explanation</p>
                   </div>
@@ -130,10 +130,10 @@
       </div>
       <div class="field is-grouped">
           <div class="control">
-              <button class="btn btn--icon-disclosure" @click="save()">SAVE</button>
+              <button class="btn btn--icon-disclosure" @click="save()">保存</button>
           </div>
           <div class="control">
-              <button class="btn btn--icon-disclosure" @click="reset()">RESET</button>
+              <button class="btn btn--icon-disclosure" @click="reset()">重置</button>
           </div>
       </div>
   </div>

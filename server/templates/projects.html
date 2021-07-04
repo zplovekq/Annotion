@@ -34,9 +34,9 @@
 
 
 
-<section class="hero banner banner--hero">
-<div class="banner--hero__content">
-    <h1><span><b>你好, {{ user.get_username | title }}.</b></span></h1>
+<section class="hero banner banner--hero" style="background:rgb(51, 58, 104)">
+<div class="banner--hero__content" >
+    <h1><span><b>你好, {{ user.get_username  }}.</b></span></h1>
   <h3><span>欢迎来到智能标注系统!</span></h3>
   <div class="banner--hero__cta-container">
           {% if user.is_superuser %}
@@ -52,7 +52,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Create Project</p>
+        <p class="modal-card-title">新建项目</p>
         <button class="delete" aria-label="close" @click="isActive=!isActive"></button>
       </header>
       <form method="post">
@@ -74,8 +74,8 @@
           {% endfor %}
         </section>
         <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
-          <button class="button is-primary">Create</button>
-          <button class="button" @click="isActive=!isActive">Cancel</button>
+          <button class="button is-primary">创建</button>
+          <button class="button" @click="isActive=!isActive">取消</button>
         </footer>
       </form>
     </div>
@@ -85,15 +85,15 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Delete Project</p>
+        <p class="modal-card-title">删除项目</p>
         <button class="delete" aria-label="close" @click="isDelete=!isDelete"></button>
       </header>
       <section class="modal-card-body">
-        Are you sure you want to delete project?
+        确定删除?
       </section>
       <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
-        <button class="button is-danger" @click="deleteProject()">Delete</button>
-        <button class="button" @click="isDelete=!isDelete">Cancel</button>
+        <button class="button is-danger" @click="deleteProject()">删除</button>
+        <button class="button" @click="isDelete=!isDelete">取消</button>
       </footer>
     </div>
   </div>

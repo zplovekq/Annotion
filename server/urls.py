@@ -6,8 +6,8 @@ from .views import ProjectView, DatasetView, DataUpload, LabelView, StatsView, S
 from .views import ProjectsView, DataDownload, DataDownloadFile,LoginView
 from .api import ProjectViewSet, LabelList, ProjectStatsAPI, LabelDetail, \
     AnnotationList, AnnotationDetail, DocumentList, RecommendationList, LearningInitiate, OnlineLearning, DocumentDetail, \
-    SettingList, ConnectToServer, RecommendationHistoryList, RecommendationHistoryDetail, ActiveLearning
-
+    SettingList, ConnectToServer, RecommendationHistoryList, RecommendationHistoryDetail, ActiveLearning,DeleteDataAPI
+from django.views.decorators.csrf import csrf_exempt
 
 router = routers.DefaultRouter()
 router.register(r'projects', ProjectViewSet)
@@ -15,11 +15,12 @@ router.register(r'projects', ProjectViewSet)
 
 urlpatterns = [
     # path('', IndexView.as_view(), name='index'),
-    path('', LoginView.as_view(), name='login'),
+    path('', csrf_exempt(LoginView.as_view()), name='login'),
     path('api/projects/<int:project_id>/stats/', ProjectStatsAPI.as_view(), name='stats-api'),
     path('api/projects/<int:project_id>/settings/', SettingList.as_view(), name='settings'),
     path('api/projects/<int:project_id>/history/', RecommendationHistoryList.as_view(), name='histories'),
     path('api/projects/<int:project_id>/history/<int:history_id>', RecommendationHistoryDetail.as_view(), name='history'),
+    path('api/projects/<int:project_id>/docdelete/<int:doc_id>', DeleteDataAPI.as_view(), name='delete_doc'),
     path('api/projects/<int:project_id>/labels/', LabelList.as_view(), name='labels'),
     path('api/projects/<int:project_id>/labels/<int:label_id>', LabelDetail.as_view(), name='label'),
     path('api/projects/<int:project_id>/docs/', DocumentList.as_view(), name='docs'),
@@ -32,11 +33,11 @@ urlpatterns = [
     path('api/projects/<int:project_id>/docs/<int:doc_id>/recommendations/', RecommendationList.as_view(), name='recommendations'),
     path('api/projects/<int:project_id>/docs/<int:doc_id>/annotations/<int:annotation_id>', AnnotationDetail.as_view(), name='ann'),
     path('projects/', ProjectsView.as_view(), name='projects'),
-    path('projects/<int:project_id>/download', DataDownload.as_view(), name='download'),
-    path('projects/<int:project_id>/download_file', DataDownloadFile.as_view(), name='download_file'),
-    path('projects/<int:project_id>/', ProjectView.as_view(), name='annotation'),
-    path('projects/<int:project_id>/docs/', DatasetView.as_view(), name='dataset'),
-    path('projects/<int:project_id>/docs/create', DataUpload.as_view(), name='upload'),
+    path('projects/<int:project_id>/download', csrf_exempt(DataDownload.as_view()), name='download'),
+    path('projects/<int:project_id>/download_file', csrf_exempt(DataDownloadFile.as_view()), name='download_file'),
+    path('projects/<int:project_id>/', csrf_exempt(ProjectView.as_view()), name='annotation'),
+    path('projects/<int:project_id>/docs/',csrf_exempt( DatasetView.as_view()), name='dataset'),
+    path('projects/<int:project_id>/docs/create', csrf_exempt(DataUpload.as_view()), name='upload'),
     path('projects/<int:project_id>/labels/', LabelView.as_view(), name='label-management'),
     path('projects/<int:project_id>/stats/', StatsView.as_view(), name='stats'),
     path('projects/<int:project_id>/setting/', SettingView.as_view(), name='setting'),

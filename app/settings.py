@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -112,6 +118,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+       # '.CsrfExemptSessionAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -146,3 +153,15 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/projects/'
 LOGOUT_REDIRECT_URL = '/'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+#X_FRAME_OPTIONS = 'ALLOWALL i3city.evo.qk0.cc localhost'
+#X_FRAME_OPTIONS='ALLOW ALL'
+X_FRAME_OPTIONS = 'ALLOWALL'
+#X_FRAME_OPTIONS = 'ALLOW-FROM rc.askgraph.xyz'
+#CSRF_TRUSTED_ORIGINS = ['rc.askgraph.xyz']
+#CSRF_COOKIE_SAMESITE = None
+#CSRF_COOKIE_SAMESITE = None
+#CORS_ALLOW_CREDENTIALS = True
+#CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SAMESITE= None
+#SESSION_COOKIE_SECURE = True

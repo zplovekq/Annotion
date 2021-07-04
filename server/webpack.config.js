@@ -10,7 +10,8 @@ module.exports = {
         'label': './static/js/label.js',
         'setting': './static/js/setting.js',
         'upload': './static/js/upload.js',
-        'dictionary': './static/js/dictionary.js'
+        'dictionary': './static/js/dictionary.js',
+        'dataset':'./static/js/dataset.js'
     },
     output: {
         path: __dirname + '/static/bundle',

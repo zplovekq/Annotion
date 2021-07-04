@@ -21,7 +21,8 @@ import spacy
 from spacy.tokens import Doc
 
 import time
-from alpaca_serving.client import *
+# from alpaca_serving.client import *
+from .client import  *
 alpaca_client = None
 
 class WhitespaceTokenizer(object):
@@ -34,8 +35,6 @@ class WhitespaceTokenizer(object):
         spaces = [True] * len(words)
         return Doc(self.vocab, words=words, spaces=spaces)
 
-nlp = spacy.load("en_core_web_sm")
-nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
 
 def alpaca_recommend(text):
     global alpaca_client
@@ -81,7 +80,7 @@ def alpaca_active_learning(train_docs, acquire):
     if response == 'error':
         print('error')
         time.sleep(2)
-        return alpaca_client.active_learning(train_docs, acquire)
+        return alpaca_active_learning(train_docs, acquire)
     return response
 
 
@@ -137,6 +136,17 @@ class ProjectStatsAPI(APIView):
                     'user': {'users': users, 'data': user_data}}
 
         return Response(response)
+
+class DeleteDataAPI(APIView):
+    pagination_class = None
+    permission_classes = (IsAuthenticated, IsProjectUser)
+    def delete(self,request,*args, **kwargs):
+        doc_id = kwargs["doc_id"]
+        doc = Document.objects.filter(id=doc_id)
+        doc.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 class LabelDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -611,9 +621,18 @@ class ActiveLearning(APIView):
         setting_data = serializer_class(setting_obj).data
 
         active_data = alpaca_active_learning(train_docs, setting_data['acquire'])
-        if active_data['scores'][0] == float('inf'):
-            active_data["indices"][0]=-1
-            active_data['scores'][0]=-1
-        response = {'indices': active_data['indices'], 'scores': active_data['scores']}
+        scores = []
+        indices = []
+        for s,i in zip(active_data["scores"],active_data["indices"]):
+            if s != float("inf"):
+                scores.append(s)
+                indices.append(i)
+        if len(scores) == 0:
+            scores.append(-1)
+            indices.append(-1)
+        # if active_data['scores'][0] == float('inf'):
+        #     active_data["indices"][0]=-1
+        #     active_data['scores'][0]=-1
+        response = {'indices': indices, 'scores': scores}
 
         return Response(response)

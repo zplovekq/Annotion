@@ -7,7 +7,7 @@
     <div class="card">
       <header class="card-header">
         <p class="card-header-title">
-          Import text items
+          导入数据
         </p>
         <a href="#" class="card-header-icon" aria-label="more options">
           <span class="icon">
@@ -17,21 +17,23 @@
       </header>
       <div class="card-content">
         <p>
-          <b>To annotate texts, you first need to import a set of text items to annotate it.</b>
+          <b>为了进行数据标注,首先需要导入数据.</b>
         </p>
         <ul.is-unstyled>
-          <li>CSV file: file must contain a header with a text column or be one-column csv file.</li>
-          <li>JSON file: a dictionary about key and label</li>
-          <li>OWL file: a owl file which defined class labels</li>
+          <li>CSV 格式: 每一列是一段文本</li>
+          <li>JSON 格式: 实体字典</li>
+          <li>OWL 格式: 上传本体模型</li>
+            <li>无格式：从领域知识系统的本体模型中选择概念作为标注标签</li>
         </ul.is-unstyled>
         <form action="" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="section">
             <div class="control">
               <label class="radio mb10">
-                <input type="radio" name="format" value="csv" checked> Upload a CSV file from your computer<br>
-                <input type="radio" name="format" value="json" checked> Upload a JSON file from your computer<br>
-                <input type="radio" name="format" value="owl" checked> Upload a OWL file from your computer<br>
+                <input type="radio" name="format" value="csv" checked>上传CSV文件<br>
+                <input type="radio" name="format" value="json" checked>上传JSON文件<br>
+                <input type="radio" name="format" value="owl" checked>上传本体模型<br>
+                  <input type="radio" name="format" value="upload" checked> 在本体模型中选择标签<br>
                </label>
               <div class="file has-name is-small mb20">
                 <label class="file-label">
@@ -41,7 +43,7 @@
                       <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label">
-                      Select a file…
+                      选择一个文件...
                     </span>
                   </span>
                   <span class="file-name">
@@ -54,10 +56,10 @@
 
           <div class="field is-grouped">
             <div class="control">
-              <button type="submit" class="button is-primary">Upload file</button>
+              <button type="submit" class="button is-primary">确定</button>
             </div>
             <div class="control">
-              <button class="button is-text">Cancel</button>
+              <button class="button is-text">取消</button>
             </div>
           </div>
         </form>

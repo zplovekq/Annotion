@@ -6,7 +6,7 @@
     <div class="card">
       <header class="card-header">
         <p class="card-header-title">
-          Export text items
+          导出标注数据
         </p>
         <a href="#" class="card-header-icon" aria-label="more options">
           <span class="icon">
@@ -16,25 +16,34 @@
       </header>
       <div class="card-content">
         <p>
-          <b>There are two data format you can download, the CSV and JSON.</b>
+          <b>可以三种导出方式,CSV、JSON和保存为系统的实例模型</b>
         </p>
         <p>
-          If you import as a JSON with line breaks and download it as CSV, the line breaks will render on the result.
-          We recommend you download it as JSON file.
+          推荐导出为JSON格式。
         </p>
           <form action="{% url 'download_file' view.kwargs.project_id %}" method="get">
             <div class="section">
               <ul>
                   <li>
                     <a class="control">
-                      <button type="submit" class="button is-primary button-margin " name="format" value="csv">Download CSV File</button>
+                      <button type="submit" class="button is-primary button-margin " name="format" value="csv">下载为CSV</button>
                     </a>
                   </li>
                   <li>
                   <a class="control">
-                    <button type="submit" class="button is-primary button-margin " name="format" value="json">Download JSON File</button>
+                    <button type="submit" class="button is-primary button-margin " name="format" value="json">下载为JSON文件</button>
                   </a>
+
                 </li>
+                  <li>
+                      <a class="control">
+<!--                    <button  type="button" class="button is-primary button-margin " name="format" value="json" onClick="function submitAction() {-->
+<!--                        return false;-->
+<!--                    }-->
+<!--                    ">保存为系统实例模型</button>-->
+                        <button type="submit" class="button is-primary button-margin " name="format" value="kg">保存为系统实例模型</button>
+                    </a>
+                  </li>
               </ul>
             </div>
           </form>

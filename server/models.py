@@ -22,19 +22,16 @@ class WhitespaceTokenizer(object):
         return Doc(self.vocab, words=words, spaces=spaces)
 
 
-nlp = spacy.load("en_core_web_sm")
-nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
-
 
 class Project(models.Model):
     SEQUENCE_LABELING = 'SequenceLabeling'
 
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
+    name = models.CharField(max_length=100,verbose_name="项目名称")
+    description = models.CharField(max_length=500,verbose_name="项目描述")
     guideline = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    users = models.ManyToManyField(User, related_name='projects')
+    users = models.ManyToManyField(User, related_name='projects',verbose_name="用户")
 
     def get_absolute_url(self):
         return reverse('upload', args=[self.id])
@@ -135,7 +132,6 @@ class Document(models.Model):
         # words = [token.text for token in doc]
         words = [token for token in self.text]
         dataset = [[self.id, word, 'O', self.metadata] for word in words]
-
         def is_valid(item):
             word = item[1]
             if word == " ":
@@ -144,13 +140,20 @@ class Document(models.Model):
                 return False
             return True
         for a in annotations:
-
             dataset[a.start_offset][2] = 'B-{}'.format(a.label.text)
             for i in range(a.start_offset + 1, a.end_offset):
                 dataset[i][2] = 'I-{}'.format(a.label.text)
         # dataset = [item for item in dataset if is_valid(item)]
-
         return dataset
+    def export_to_knowledge_graph(self):
+        annotations = self.seq_annotations.filter(document_id=self.id)
+        words = [token for token in self.text]
+        from collections import defaultdict
+        result =defaultdict(set)
+        for a in annotations:
+            entity = words[a.start_offset:a.end_offset]
+            result[a.label.text].add("".join(entity))
+        return result
 
     def to_json(self):
         return self.make_dataset_json()

@@ -23,15 +23,15 @@
     </div>
   </header>
   <div class="card-content">
-      <span class="tag">标注部分</span>
-      <span class="tag" v-if="confidence">置信度 : [[ confidenceElement ]]</span>
+      <span class="tag" style="font-size: 20px">用户标注</span>
+<!--      <span class="tag" v-if="confidence">置信度 : [[ confidenceElement ]]</span>-->
     <div class="content" v-if="docs[pageNumber] && annotations[pageNumber]">
       <annotator ref="annotator" v-bind:labels="labels" v-bind:entity-positions="annotations[pageNumber]" v-bind:text="docs[pageNumber].text"
         @remove-label="removeLabel" @add-label="addLabel"></annotator>
     </div>
   </div>
   <div class="card-content">
-      <span class="tag">推荐部分</span>
+      <span class="tag" style="font-size: 20px">AI智能推荐</span>
     <div class="content" v-if="docs[pageNumber] && recommendations[pageNumber]">
       <recommender ref="recommender" v-bind:labels="labels" v-bind:text="docs[pageNumber].text"
         v-bind:recommend-positions="recommendations[pageNumber]" @remove-label="removeLabel" @add-label="addLabel"></recommender>

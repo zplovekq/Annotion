@@ -193,7 +193,7 @@ Vue.component('annotator', {
     },
   },
 });
-
+//<div class="control" v-for="label in labels" v-bind:style="[r.label==label.text ? {'border': 'solid red'} : {'border': 'none'}]">
 Vue.component('recommender', {
   // eslint-disable-next-line no-multi-str
   template: '<div><template v-for="r in chunks">\
@@ -206,7 +206,7 @@ Vue.component('recommender', {
                           <template slot="popover">\
                                 <div class="card-header-title has-background-royalblue" style="padding:1.5rem;">\
                                   <div class="field is-grouped is-grouped-multiline">\
-                                    <div class="control" v-for="label in labels" v-bind:style="[r.label==label.text ? {\'border\': \'solid red\'} : {\'border\': \'none\'}]">\
+                                    <div class="control" v-for="label in labels" v-bind:style="[r.label==label.text ? {\'border\': \'solid red\'} : {\'display\': \'none\'}]">\
                                       <div class="tags has-addons">\
                                         <a class="tag is-medium" v-bind:style="{ color: label.text_color, backgroundColor: label.background_color }"\
                                             v-on:click="annotate(label.id, r.start_offset, r.end_offset)" >{{ label.text }}</a>\

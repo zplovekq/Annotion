@@ -231,6 +231,7 @@ const annotationMixin = {
       if (this.active !== 1 && this.server === true){
         this.activelearning().then((response) => {
             if(this.activeIndices[0]===-1){
+              console.log("get indictes -1")
               return
             }
             else {
@@ -260,10 +261,13 @@ const annotationMixin = {
         this.activeScores = response.data.scores;
         console.log(this.activeIndices);
         console.log(this.activeScores);
-        if(this.activeIndices[0]===-1){
-        console.log(window.location.href)
-        window.location.href=window.location.href+"docs/";
-      }
+        let s;
+        if (this.activeIndices[0] === -1) {
+          console.log(window.location.href)
+          s = window.location.href
+          window.location.href = s.replace("#", "") + "stats/";
+          console.log(window.location.href)
+        }
       });
     },
 

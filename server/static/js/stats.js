@@ -75,8 +75,8 @@ const vm = new Vue({
 
   created() {
     HTTP.get('stats').then((response) => {
-      this.labelData = this.makeData(response.data.label.data, response.data.label.labels, 'Label stats');
-      this.userData = this.makeData(response.data.user.data, response.data.user.users, 'User stats');
+      this.labelData = this.makeData(response.data.label.data, response.data.label.labels, '标签状态');
+      this.userData = this.makeData(response.data.user.data, response.data.user.users, '用户状态');
     });
     HTTP.get('progress').then((response) => {
       const complete = response.data.total - response.data.remaining;
@@ -88,8 +88,8 @@ const vm = new Vue({
         }],
 
         labels: [
-          'Completed',
-          'Incomplete',
+          '已完成',
+          '未完成',
         ],
       };
     });

@@ -25,6 +25,7 @@
         <tr>
           <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
           <td>{{ doc.text|truncatechars:200 }}</td>
+          <td class="is-vertical"><a id='delete' class="has-text-danger" onclick="deleteWord({{ doc.id }});">删除</a></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -77,4 +78,5 @@
   </ul>
 </nav>
 {% endif %}
+<script type="module" src="{% static 'bundle/dataset.js' %}"></script>
 {% endblock %}

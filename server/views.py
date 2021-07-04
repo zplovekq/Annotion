@@ -16,11 +16,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from .permissions import SuperUserMixin
-from .models import Document, Project, RecommendationHistory,Label
-from server.serializers import LabelSerializer,RecommendationHistorySerializer
+from .models import Document, Project, RecommendationHistory, Label
+from server.serializers import LabelSerializer, RecommendationHistorySerializer
 import spacy
 from spacy.tokens import Doc
 from django.utils.encoding import escape_uri_path
+from django.views.decorators.csrf import csrf_exempt
+
+
 class WhitespaceTokenizer(object):
     def __init__(self, vocab):
         self.vocab = vocab
@@ -31,8 +34,9 @@ class WhitespaceTokenizer(object):
         spaces = [True] * len(words)
         return Doc(self.vocab, words=words, spaces=spaces)
 
-nlp = spacy.load("en_core_web_sm")
-nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
+
+# nlp = spacy.load("en_core_web_sm")
+# nlp.tokenizer = WhitespaceTokenizer(nlp.vocab)
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +90,7 @@ class StatsView(SuperUserMixin, LoginRequiredMixin, TemplateView):
     template_name = 'admin/stats.html'
 
 
-#need fix
+# need fix
 class SettingView(LoginRequiredMixin, TemplateView):
     template_name = 'admin/setting.html'
 
@@ -114,7 +118,8 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
                 reader = it.chain([maybe_header], reader)
                 text_col = 0
             else:
-                raise DataUpload.ImportFileError("CSV file must have either a title with \"text\" column or have only one column ")
+                raise DataUpload.ImportFileError(
+                    "CSV file must have either a title with \"text\" column or have only one column ")
 
             # header_without_text = [title for i, title in enumerate(maybe_header)
             #                        if i != text_col]
@@ -144,9 +149,10 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
             Document(text=entry[text_key], metadata=self.extract_metadata_json(entry, text_key), project=project)
             for entry in parsed_entries
         )
-    def load_owl_file(self,file):
+
+    def load_owl_file(self, file):
         import rdflib
-        result =[]
+        result = []
         g = rdflib.Graph()
         g.parse(file)
         q = '''SELECT ?class ?classLabel
@@ -157,37 +163,42 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
         for a, b in g.query(q):
             result.append(str(b))
         return result
-    def add_label(self,data,project):
+
+    def add_label(self, data, project):
         ls = LabelSerializer(data=data)
         ls.is_valid()
         ls.save(project=project)
-    def owl_to_labels(self,project,file):
+
+    def owl_to_labels(self, project, file):
         import random
         colorArr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
         label_list = self.load_owl_file(file)
-        data = { 'shortcut': None,  'text_color': '#ffffff'}
+        data = {'shortcut': None, 'text_color': '#ffffff'}
         for label in label_list:
-            data['text']=str(label)
+            data['text'] = str(label)
             color = ""
             for i in range(6):
                 color += colorArr[random.randint(0, 14)]
-            data['background_color']="#"+color
-            self.add_label(data,project)
-    def add_dict(self,data,project,user):
+            data['background_color'] = "#" + color
+            self.add_label(data, project)
+
+    def add_dict(self, data, project, user):
         rs = RecommendationHistorySerializer(data=data)
         rs.is_valid()
         rs.save(project=project, user=user)
-    def json_to_dict(self,project,file,user):
-        labels =Label.objects.all().filter(project=project.id)
-        text_id ={}
+
+    def json_to_dict(self, project, file, user):
+        labels = Label.objects.all().filter(project=project.id)
+        text_id = {}
         for l in labels:
-            text_id[l.text]=l.id
+            text_id[l.text] = l.id
         contents = json.load(file)
-        data={}
+        data = {}
         for k in contents:
-            data['word']=k
-            data['label']=text_id[contents[k]]
-            self.add_dict(data,project,user)
+            data['word'] = k
+            data['label'] = text_id[contents[k]]
+            self.add_dict(data, project, user)
+
     def post(self, request, *args, **kwargs):
         project = get_object_or_404(Project, pk=kwargs.get('project_id'))
         import_format = request.POST['format']
@@ -198,11 +209,11 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
                 documents = self.csv_to_documents(project, file)
 
             elif import_format == 'json':
-                self.json_to_dict(project,file,self.request.user)
+                self.json_to_dict(project, file, self.request.user)
                 # documents = self.json_to_documents(project, file)
                 return HttpResponseRedirect(reverse('dictionary', args=[project.id]))
             elif import_format == 'owl':
-                self.owl_to_labels(project,file)
+                self.owl_to_labels(project, file)
                 return HttpResponseRedirect(reverse('label-management', args=[project.id]))
             IMPORT_BATCH_SIZE = 500
             batch_size = IMPORT_BATCH_SIZE
@@ -241,6 +252,8 @@ class DataDownloadFile(LoginRequiredMixin, View):
                 response = self.get_csv(filename, docs, user_id)
             elif export_format == 'json':
                 response = self.get_json(filename, docs, user_id)
+            elif export_format == "kg":
+                response = self.get_kg(filename, docs, user_id)
             return response
         except Exception as e:
             logger.exception(e)
@@ -255,6 +268,18 @@ class DataDownloadFile(LoginRequiredMixin, View):
             writer.writerows(d.to_csv(user_id))
         return response
 
+    def get_kg(self, filename, docs, user_id):
+        response = HttpResponse(content_type='text/json')
+        response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(escape_uri_path(filename))
+        from collections import defaultdict
+        result =defaultdict(set)
+        for d in docs:
+            tmp_result = d.export_to_knowledge_graph()
+            for key in tmp_result.keys():
+                result[key] = result[key].union(tmp_result[key])
+        dump = json.dumps(result, ensure_ascii=False,default=lambda x: list(x) if isinstance(x, set) else x)
+        response.write(dump + '\n')
+        return response
     def get_json(self, filename, docs, user_id):
         response = HttpResponse(content_type='text/json')
         response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(escape_uri_path(filename))
@@ -268,4 +293,3 @@ class DataDownloadFile(LoginRequiredMixin, View):
 class LoginView(BaseLoginView):
     template_name = 'login.html'
     redirect_authenticated_user = True
-
